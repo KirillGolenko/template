@@ -11,7 +11,10 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@model/*": ["src/model/*"],
+      "@users/*": ["src/users/*"],
+      "@dto/*": ["src/dto/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
