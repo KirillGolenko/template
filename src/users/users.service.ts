@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
-import ChangePasswordDto from '@dto/changePassword.dto';
-import LoginPayload from '@dto/loginPayload.dto';
-import CreateUserDto from '@dto/user.dto';
-import User from '@model/user.entity';
+import UserLogin from '@dto/userLogin.dto';
+import CreateUserDto from '@users/dto/user.dto';
+import User from '@users/entity/user.entity';
+import ChangePasswordDto from '@dto/UserChangePassword.dto';
 
 @Injectable()
 export class UsersService {
@@ -50,7 +50,7 @@ export class UsersService {
     }
   }
 
-  async login(@Body() data: LoginPayload) {
+  async login(@Body() data: UserLogin) {
     const { user_name, password } = data;
     const user = await this.usersRepository.findOne({
       where: { user_name: user_name, password: password },
@@ -60,17 +60,26 @@ export class UsersService {
   }
 
   async changePassword(data: ChangePasswordDto, id: number) {
-    const { password } = data;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const { newPassword, oldPassword } = data;
     try {
-      await this.usersRepository.update(id, { password: hashedPassword });
+      const user = await this.usersRepository.findOne({
+        where: { id: id },
+      });
+      const hash = await bcrypt.compare(oldPassword, user.password);
+
+      if (hash) {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await this.usersRepository.update(id, { password: hashedPassword });
+
+        const updatedPost = await this.usersRepository.findOne({
+          where: { id: id },
+        });
+        if (updatedPost) return updatedPost;
+      } else {
+        throw new Error();
+      }
     } catch (error) {
       throw new HttpException('Wrong data', HttpStatus.NOT_FOUND);
     }
-    const updatedPost = await this.usersRepository.findOne({
-      where: { id: id },
-    });
-    if (updatedPost) return updatedPost;
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 }

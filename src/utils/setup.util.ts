@@ -3,6 +3,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
 import { useSwagger } from './swagger.util';
+import HttpExceptionFilter from 'src/filter/http-exception.filter';
 
 export const setup = (app: NestExpressApplication, port: string) => {
   const logger = new Logger(setup.name);
@@ -10,6 +11,7 @@ export const setup = (app: NestExpressApplication, port: string) => {
 
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.setGlobalPrefix(path);
   app.enableCors();
 

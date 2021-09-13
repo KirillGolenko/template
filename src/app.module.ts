@@ -1,4 +1,4 @@
-import User from '@model/user.entity';
+import User from '@users/entity/user.entity';
 import * as Joi from '@hapi/joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -6,14 +6,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
-import { ProductModule } from './product/product.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
     DatabaseModule,
-    ProductModule,
+    ProductsModule,
     TypeOrmModule.forFeature([User]),
     ConfigModule.forRoot({
       validationSchema: Joi.object({

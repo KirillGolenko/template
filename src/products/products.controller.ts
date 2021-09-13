@@ -7,16 +7,16 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { CreateProductDto } from '@dto/product.dto';
-import { ProductService } from './product.service';
-import Product from '@model/product.entity';
+import { CreateProductDto } from 'src/products/dto/product.dto';
+import { ProductsService } from './products.service';
+import Product from 'src/products/entity/product.entity';
 import JwtAuthenticationGuard from '@guard/jwt-authentication.guard';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('product')
-@Controller('product')
-export class ProductController {
-  constructor(private productService: ProductService) {}
+@ApiTags('products')
+@Controller('products')
+export class ProductsController {
+  constructor(private productService: ProductsService) {}
 
   @Get('/:id')
   findProduct(@Param('id') id: number): Promise<{ data: Product }> {

@@ -1,32 +1,38 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export default class User {
   @PrimaryGeneratedColumn()
-  public id: number;
+  id: number;
 
   @ApiProperty({
     description: 'The user_name of the user.',
   })
   @Column({ unique: true })
-  public user_name: string;
+  user_name: string;
 
   @ApiProperty({
     description: 'The first_name of the user.',
   })
   @Column()
-  public first_name: string;
+  first_name: string;
 
   @ApiProperty({
     description: 'The last_name of the user.',
   })
   @Column()
-  public last_name: string;
+  last_name: string;
 
   @ApiProperty({
     description: 'The password of the user.',
   })
   @Column()
-  public password: string;
+  @Exclude()
+  password: string;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }

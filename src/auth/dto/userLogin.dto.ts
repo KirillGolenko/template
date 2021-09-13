@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
-export default class LoginPayload {
+export default class UserLogin {
   @ApiProperty({
-    description: 'The useuser_name of the user.',
+    description: 'The username of the user.',
     example: 'admin',
   })
   @IsNotEmpty()

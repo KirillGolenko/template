@@ -7,5 +7,12 @@ export default class ChangePasswordDto {
   })
   @IsNotEmpty()
   @Length(5, 20)
-  password: string;
+  newPassword: string;
+
+  @ApiProperty({
+    description: 'Old password',
+  })
+  @IsNotEmpty()
+  @Length(5, 20)
+  oldPassword: string;
 }

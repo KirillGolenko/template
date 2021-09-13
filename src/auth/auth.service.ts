@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '@users/users.service';
-import User from '@model/user.entity';
+import User from '@users/entity/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -13,14 +13,13 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  public async register(registrationData: User) {
+  public async register(registrationData: User): Promise<User> {
     const hashedPassword = await bcrypt.hash(registrationData.password, 10);
     try {
-      const createdUser = await this.usersService.registration({
+      const createdUser: User = await this.usersService.registration({
         ...registrationData,
         password: hashedPassword,
       });
-      createdUser.password = undefined;
       return createdUser;
     } catch (error) {
       throw new HttpException(

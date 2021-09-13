@@ -14,8 +14,8 @@
       "@utils/*": ["src/utils/*"],
       "@model/*": ["src/model/*"],
       "@users/*": ["src/users/*"],
-      "@interface/*": ["src/interface/*"],
-      "@dto/*": ["src/dto/*"],
+      "@interface/*": ["src/auth/interface/*"],
+      "@dto/*": ["src/auth/dto/*"],
       "@guard/*": ["src/auth/guard/*"]
     },
     "incremental": true,

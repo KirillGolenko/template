@@ -7,15 +7,17 @@ import {
   UseGuards,
   Res,
   Get,
+  UseFilters,
 } from '@nestjs/common';
 import { Response } from 'express';
 import LocalAuthenticationGuard from '@guard/localAuthentication.guard';
 import JwtAuthenticationGuard from '@guard/jwt-authentication.guard';
-import RequestWithUser from '@interface/requestWithUser.interface';
-import LoginPayload from '@dto/loginPayload.dto';
+import RequestWithUser from 'src/auth/interface/requestWithUser.interface';
+import UserLogin from '@dto/userLogin.dto';
 import { AuthService } from './auth.service';
-import User from '@model/user.entity';
+import User from '@users/entity/user.entity';
 import { ApiTags } from '@nestjs/swagger';
+import HttpExceptionFilter from 'src/filter/http-exception.filter';
 
 @ApiTags('authentication')
 @Controller('authentication')
@@ -38,7 +40,7 @@ export class AuthController {
   @HttpCode(200)
   @UseGuards(LocalAuthenticationGuard)
   @Post('log-in')
-  async logIn(@Body() body: LoginPayload, @Res() response: Response) {
+  async logIn(@Body() body: UserLogin, @Res() response: Response) {
     const { user_name } = body;
     const cookie = this.authenticationService.getCookieWithJwtToken(user_name);
     response.setHeader('Set-Cookie', cookie);
