@@ -9,11 +9,15 @@ import {
   Get,
 } from '@nestjs/common';
 import { Response } from 'express';
+import LocalAuthenticationGuard from '@guard/localAuthentication.guard';
+import JwtAuthenticationGuard from '@guard/jwt-authentication.guard';
+import RequestWithUser from '@interface/requestWithUser.interface';
+import LoginPayload from '@dto/loginPayload.dto';
 import { AuthService } from './auth.service';
-import RequestWithUser from './interface/requestWithUser.interface';
-import JwtAuthenticationGuard from './guard/jwt-authentication.guard';
-import { LocalAuthenticationGuard } from './guard/localAuthentication.guard';
+import User from '@model/user.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('authentication')
 @Controller('authentication')
 export class AuthController {
   constructor(private readonly authenticationService: AuthService) {}
@@ -27,26 +31,24 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() registrationData) {
+  async register(@Body() registrationData: User) {
     return this.authenticationService.register(registrationData);
   }
 
   @HttpCode(200)
   @UseGuards(LocalAuthenticationGuard)
   @Post('log-in')
-  async logIn(@Req() request, @Res() response: Response) {
-    const { user } = request;
-    const cookie = this.authenticationService.getCookieWithJwtToken(
-      user.user_name,
-    );
+  async logIn(@Body() body: LoginPayload, @Res() response: Response) {
+    const { user_name } = body;
+    const cookie = this.authenticationService.getCookieWithJwtToken(user_name);
     response.setHeader('Set-Cookie', cookie);
-    user.password = undefined;
-    return response.send(user);
+    body.password = undefined;
+    return response.send(body);
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Post('log-out')
-  async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
+  @Get('log-out')
+  async logOut(@Res() response: Response) {
     response.setHeader(
       'Set-Cookie',
       this.authenticationService.getCookieForLogOut(),

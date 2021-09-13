@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export const useSwagger = (app: NestExpressApplication, path: string) => {
   const options = new DocumentBuilder()
-    .setTitle('Users api')
+    .setTitle('Product api')
     .setDescription('API')
     .setVersion('1.0')
     .build();

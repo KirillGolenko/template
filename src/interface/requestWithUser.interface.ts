@@ -1,8 +1,6 @@
 import { Request } from 'express';
 import User from '@model/user.entity';
 
-interface RequestWithUser extends Request {
+export default interface RequestWithUser extends Request {
   user: User;
 }
-
-export default RequestWithUser;

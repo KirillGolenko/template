@@ -14,7 +14,9 @@
       "@utils/*": ["src/utils/*"],
       "@model/*": ["src/model/*"],
       "@users/*": ["src/users/*"],
-      "@dto/*": ["src/dto/*"]
+      "@interface/*": ["src/interface/*"],
+      "@dto/*": ["src/dto/*"],
+      "@guard/*": ["src/auth/guard/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
