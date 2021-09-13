@@ -3,7 +3,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
 import { useSwagger } from './swagger.util';
-import HttpExceptionFilter from 'src/filter/http-exception.filter';
+import HttpExceptionFilter from 'src/filters/http-exception.filter';
 
 export const setup = (app: NestExpressApplication, port: string) => {
   const logger = new Logger(setup.name);

@@ -5,14 +5,17 @@ import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import UserLogin from '@dto/userLogin.dto';
 import CreateUserDto from '@users/dto/user.dto';
-import User from '@users/entity/user.entity';
 import ChangePasswordDto from '@dto/UserChangePassword.dto';
+import User from './entity/user.entity';
+import GoogleUser from './entity/googleUser.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(GoogleUser)
+    private googleRepository: Repository<GoogleUser>,
   ) {}
 
   createHash(login: string) {
@@ -22,6 +25,35 @@ export class UsersService {
     };
     const older_token = jwt.sign(signature, process.env.JWT_SECRET);
     return older_token;
+  }
+
+  async googleLogin(req) {
+    const { user } = req;
+    if (!user) {
+      return 'No user from google';
+    }
+
+    const isExist = await this.googleRepository.findOne({
+      where: { googleId: user.id },
+    });
+
+    if (!isExist) {
+      const data = {
+        name: `${user.firstName} ${user.lastName}`,
+        googleId: user.id,
+      };
+      const newUser = await this.googleRepository.create(data);
+      await this.googleRepository.save(newUser);
+
+      return {
+        message: 'User information from google',
+        user: newUser,
+      };
+    } else {
+      return {
+        message: 'User already exists',
+      };
+    }
   }
 
   async getByUserName(user_name: string) {

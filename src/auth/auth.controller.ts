@@ -17,12 +17,22 @@ import UserLogin from '@dto/userLogin.dto';
 import { AuthService } from './auth.service';
 import User from '@users/entity/user.entity';
 import { ApiTags } from '@nestjs/swagger';
-import HttpExceptionFilter from 'src/filter/http-exception.filter';
+import GoogleAuthenticationGuard from '@guard/google-authentication.guard';
+import { UsersService } from '@users/users.service';
 
 @ApiTags('authentication')
 @Controller('authentication')
 export class AuthController {
-  constructor(private readonly authenticationService: AuthService) {}
+  constructor(
+    private readonly authenticationService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
+
+  @Get('google/redirect')
+  @UseGuards(GoogleAuthenticationGuard)
+  async googleAuthRedirect(@Req() req) {
+    return await this.usersService.googleLogin(req);
+  }
 
   @UseGuards(JwtAuthenticationGuard)
   @Get()
