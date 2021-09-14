@@ -1,11 +1,23 @@
 {
   "database": {
-    "type": "postgres",
-    "host": "localhost",
-    "port": 5432,
-    "user": "postgres",
-    "password": "root",
-    "db": "postgres"
+    "postgresql": {
+      "type": "postgres",
+      "host": "localhost",
+      "port": 5432,
+      "username": "postgres",
+      "password": "root",
+      "database": "postgres",
+      "autoLoadEntities": true,
+      "synchronize": true
+    },
+    "mongodb": {
+      "type": "mongodb",
+      "url": "mongodb+srv://testUser:<password>@cluster0-****.mongodb.net/test?retryWrites=true&w=majority",
+      "useNewUrlParser": true,
+      "synchronize": true,
+      "logging": true,
+      "entities": ["src/entity/*.*"]
+    }
   },
   "port": 3000,
   "jwt": {
@@ -13,8 +25,8 @@
     "expirationTime": 20000
   },
   "google": {
-    "id": "565285437773-4eassnqmftlv2mkedrpdhoi4qdb4l5hd.apps.googleusercontent.com",
-    "key": "2fCPAKWa9ea4Br5BuhPCXBJy"
+    "id": "",
+    "key": ""
   },
   "nodeEnvironment": "development"
 }
