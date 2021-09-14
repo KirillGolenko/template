@@ -11,12 +11,9 @@
       "synchronize": true
     },
     "mongodb": {
-      "type": "mongodb",
-      "url": "mongodb+srv://testUser:<password>@cluster0-****.mongodb.net/test?retryWrites=true&w=majority",
+      "uri": "mongodb+srv://root:root@cluster0.egymp.mongodb.net/template",
       "useNewUrlParser": true,
-      "synchronize": true,
-      "logging": true,
-      "entities": ["src/entity/*.*"]
+      "useCreateIndex": true
     }
   },
   "port": 3000,
@@ -25,8 +22,8 @@
     "expirationTime": 20000
   },
   "google": {
-    "id": "",
-    "key": ""
+    "id": "565285437773-4eassnqmftlv2mkedrpdhoi4qdb4l5hd.apps.googleusercontent.com",
+    "key": "2fCPAKWa9ea4Br5BuhPCXBJy"
   },
   "nodeEnvironment": "development"
 }
