@@ -57,9 +57,11 @@ export class AuthController {
   @Post('log-in')
   async logIn(@Body() body: UserLogin, @Res() response: Response) {
     const { user_name } = body;
+
     const cookie = await this.authenticationService.getCookieWithJwtToken(
       user_name,
     );
+
     response.setHeader('Set-Cookie', cookie);
     body.password = undefined;
     return response.send(body);

@@ -9,6 +9,9 @@ import User from './entity/user.entity';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import * as config from 'config';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { MUser, UserDocument } from './model/user.model';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +20,8 @@ export class UsersService {
     private usersRepository: Repository<User>,
     @InjectRepository(GoogleUser)
     private googleRepository: Repository<GoogleUser>,
+    @InjectModel(MUser.name)
+    private userModel: Model<UserDocument>,
   ) {}
 
   createHash(login: string) {
@@ -29,9 +34,13 @@ export class UsersService {
   }
 
   async getRoles(user_name: string) {
-    const user = await this.usersRepository.findOne({
-      where: { user_name: user_name },
-    });
+    // Postgress
+    // const user = await this.usersRepository.findOne({
+    //   where: { user_name: user_name },
+    // });
+
+    const user = await this.userModel.findOne({ user_name });
+
     return user.roles;
   }
 
@@ -41,17 +50,35 @@ export class UsersService {
       return 'No user from google';
     }
 
-    const isExist = await this.googleRepository.findOne({
-      where: { googleId: user.id },
+    // Postgress
+    // const isExist = await this.googleRepository.findOne({
+    //   where: { googleId: user.id },
+    // });
+
+    const isExist = await this.userModel.findOne({
+      googleId: user.id,
     });
 
     if (!isExist) {
+      // Postgress
+      // const data = {
+      //   name: `${user.firstName} ${user.lastName}`,
+      //   googleId: user.id,
+      // };
+
       const data = {
-        name: `${user.firstName} ${user.lastName}`,
+        username: `${user.firstName} ${user.lastName}`,
+        first_name: user.firstName,
+        last_name: user.lastName,
         googleId: user.id,
       };
-      const newUser = await this.googleRepository.create(data);
-      await this.googleRepository.save(newUser);
+
+      // Postgress
+      // const newUser = await this.googleRepository.create(data);
+      // await this.googleRepository.save(newUser);
+
+      const newUser = new this.userModel(data);
+      await newUser.save();
 
       return {
         message: 'User information from google',
@@ -65,9 +92,13 @@ export class UsersService {
   }
 
   async getByUserName(user_name: string) {
-    const user = await this.usersRepository.findOne({
-      where: { user_name: user_name },
-    });
+    // Postgress
+    // const user = await this.usersRepository.findOne({
+    //   where: { user_name: user_name },
+    // });
+
+    const user = await this.userModel.findOne({ user_name });
+
     if (user) return user;
     throw new HttpException(
       'User with this user_name does not exist',
@@ -76,15 +107,20 @@ export class UsersService {
   }
 
   async registration(@Body() data: CreateUserDto) {
-    const { user_name } = data;
+    const { username } = data;
+    // Postgress
+    // const user = await this.usersRepository.findOne({
+    //   where: { user_name: user_name },
+    // });
 
-    const user = await this.usersRepository.findOne({
-      where: { user_name: user_name },
-    });
+    const user = await this.userModel.findOne({ username });
+
     if (!user) {
-      const newUser = await this.usersRepository.create(data);
-      await this.usersRepository.save(newUser);
-      return newUser;
+      // Postgress
+      // const newUser = await this.usersRepository.create(data);
+      // await this.usersRepository.save(newUser);
+      const newUser = new this.userModel(data);
+      return newUser.save();
     } else {
       throw new HttpException('User already exists', HttpStatus.UNAUTHORIZED);
     }
@@ -92,9 +128,13 @@ export class UsersService {
 
   async login(@Body() data: UserLogin) {
     const { user_name, password } = data;
-    const user = await this.usersRepository.findOne({
-      where: { user_name: user_name, password: password },
-    });
+    // Postgress
+    // const user = await this.usersRepository.findOne({
+    //   where: { user_name: user_name, password: password },
+    // });
+
+    const user = await this.userModel.findOne({ user_name, password });
+
     if (user) return { token: this.createHash(user_name), data: user };
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
@@ -102,18 +142,31 @@ export class UsersService {
   async changePassword(data: ChangePasswordDto, id: number) {
     const { newPassword, oldPassword } = data;
     try {
-      const user = await this.usersRepository.findOne({
-        where: { id: id },
-      });
+      // Postgress
+      // const user = await this.usersRepository.findOne({
+      //   where: { id: id },
+      // });
+
+      const user = await this.userModel.findOne({ _id: id });
+
       const hash = await bcrypt.compare(oldPassword, user.password);
 
       if (hash) {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        await this.usersRepository.update(id, { password: hashedPassword });
 
-        const updatedPost = await this.usersRepository.findOne({
-          where: { id: id },
-        });
+        // Postgress
+        // await this.usersRepository.update(id, { password: hashedPassword });
+
+        const updatedPost = await this.userModel.findOneAndUpdate(
+          { _id: id },
+          { $set: { password: hashedPassword } },
+        );
+        updatedPost.password = undefined;
+
+        // Postgress
+        // const updatedPost = await this.usersRepository.findOne({
+        //   where: { id: id },
+        // });
         if (updatedPost) return updatedPost;
       } else {
         throw new Error();

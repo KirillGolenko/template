@@ -6,13 +6,13 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('User')
 export default class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @ApiProperty({
     description: 'The user_name of the user.',
   })
   @Column({ unique: true })
-  user_name: string;
+  username: string;
 
   @ApiProperty({
     description: 'The first_name of the user.',

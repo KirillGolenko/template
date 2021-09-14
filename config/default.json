@@ -1,11 +1,20 @@
 {
   "database": {
-    "type": "postgres",
-    "host": "localhost",
-    "port": 5432,
-    "user": "postgres",
-    "password": "root",
-    "db": "postgres"
+    "postgresql": {
+      "type": "postgres",
+      "host": "localhost",
+      "port": 5432,
+      "username": "postgres",
+      "password": "root",
+      "database": "postgres",
+      "autoLoadEntities": true,
+      "synchronize": true
+    },
+    "mongodb": {
+      "uri": "mongodb+srv://root:root@cluster0.egymp.mongodb.net/template",
+      "useNewUrlParser": true,
+      "useCreateIndex": true
+    }
   },
   "port": 3000,
   "jwt": {
