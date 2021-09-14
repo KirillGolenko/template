@@ -7,18 +7,17 @@ import {
   UseGuards,
   Res,
   Get,
-  UseFilters,
 } from '@nestjs/common';
 import { Response } from 'express';
-import LocalAuthenticationGuard from '@guard/localAuthentication.guard';
-import JwtAuthenticationGuard from '@guard/jwt-authentication.guard';
-import RequestWithUser from 'src/auth/interface/requestWithUser.interface';
-import UserLogin from '@dto/userLogin.dto';
-import { AuthService } from './auth.service';
-import User from '@users/entity/user.entity';
 import { ApiTags } from '@nestjs/swagger';
-import GoogleAuthenticationGuard from '@guard/google-authentication.guard';
+import RequestWithUser from 'src/auth/interface/requestWithUser.interface';
+import GoogleAuthenticationGuard from '@guard/googleAuthentication.guard';
+import LocalAuthenticationGuard from '@guard/localAuthentication.guard';
+import JwtAuthenticationGuard from '@guard/jwtAuthentication.guard';
 import { UsersService } from '@users/users.service';
+import User from '@users/entity/user.entity';
+import { AuthService } from './auth.service';
+import UserLogin from '@dto/userLogin.dto';
 
 @ApiTags('authentication')
 @Controller('authentication')
@@ -27,6 +26,12 @@ export class AuthController {
     private readonly authenticationService: AuthService,
     private readonly usersService: UsersService,
   ) {}
+
+  @Get('google')
+  @UseGuards(GoogleAuthenticationGuard)
+  async googleAuth(): Promise<void> {
+    return;
+  }
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthenticationGuard)
@@ -52,7 +57,9 @@ export class AuthController {
   @Post('log-in')
   async logIn(@Body() body: UserLogin, @Res() response: Response) {
     const { user_name } = body;
-    const cookie = this.authenticationService.getCookieWithJwtToken(user_name);
+    const cookie = await this.authenticationService.getCookieWithJwtToken(
+      user_name,
+    );
     response.setHeader('Set-Cookie', cookie);
     body.password = undefined;
     return response.send(body);

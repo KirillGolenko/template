@@ -1,7 +1,7 @@
 import { Body, Controller, Put, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
-import ChangePasswordDto from '@dto/UserChangePassword.dto';
+import ChangePasswordDto from '@dto/userChangePassword.dto';
 
 @ApiTags('authentication')
 @Controller('users')

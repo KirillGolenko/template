@@ -1,0 +1,20 @@
+{
+  "database": {
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "user": "postgres",
+    "password": "root",
+    "db": "postgres"
+  },
+  "port": 3000,
+  "jwt": {
+    "secret": "secret",
+    "expirationTime": 20000
+  },
+  "google": {
+    "id": "565285437773-4eassnqmftlv2mkedrpdhoi4qdb4l5hd.apps.googleusercontent.com",
+    "key": "2fCPAKWa9ea4Br5BuhPCXBJy"
+  },
+  "nodeEnvironment": "development"
+}

@@ -10,8 +10,10 @@ import {
 import { CreateProductDto } from 'src/products/dto/product.dto';
 import { ProductsService } from './products.service';
 import Product from 'src/products/entity/product.entity';
-import JwtAuthenticationGuard from '@guard/jwt-authentication.guard';
+import JwtAuthenticationGuard from '@guard/jwtAuthentication.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { Role } from 'src/auth/enums/role.enum';
 
 @ApiTags('products')
 @Controller('products')
@@ -24,6 +26,7 @@ export class ProductsController {
   }
 
   @Post('/create')
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthenticationGuard)
   registration(@Body() body: CreateProductDto): Promise<{ data: Product[] }> {
     return this.productService.createProduct(body);

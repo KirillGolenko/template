@@ -4,11 +4,11 @@ import { Injectable } from '@nestjs/common';
 import * as config from 'config';
 
 @Injectable()
-export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
+export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      clientID: config.get('GOOGLE_CLIENT_ID'),
-      clientSecret: config.get('GOOGLE_SECRET'),
+      clientID: config.get('google.id'),
+      clientSecret: config.get('google.key'),
       callbackURL:
         'http://localhost:3000/api/v1/authentication/google/redirect',
       scope: ['email', 'profile'],

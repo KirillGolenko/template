@@ -1,4 +1,5 @@
 import { IsNotEmpty, Length } from 'class-validator';
+import { Role } from 'src/auth/enums/role.enum';
 
 export default class CreateUserDto {
   @IsNotEmpty()
@@ -13,4 +14,7 @@ export default class CreateUserDto {
   @IsNotEmpty()
   @Length(5, 20)
   password: string;
+
+  @IsNotEmpty()
+  roles: Role.User | Role.Admin;
 }

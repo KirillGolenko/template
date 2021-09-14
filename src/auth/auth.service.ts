@@ -1,16 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import { UsersService } from '@users/users.service';
 import User from '@users/entity/user.entity';
+import * as bcrypt from 'bcrypt';
+import * as config from 'config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
   ) {}
 
   public async register(registrationData: User): Promise<User> {
@@ -62,11 +61,13 @@ export class AuthService {
     }
   }
 
-  public getCookieWithJwtToken(user_name: string) {
-    const payload = { user_name };
+  public async getCookieWithJwtToken(user_name: string) {
+    const roles = await this.usersService.getRoles(user_name);
+    const payload = { user_name, roles };
+
     const token = this.jwtService.sign(payload);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
-      'JWT_EXPIRATION_TIME',
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${config.get(
+      'jwt.expirationTime',
     )}`;
   }
 

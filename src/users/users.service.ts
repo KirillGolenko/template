@@ -1,13 +1,14 @@
 import { Body, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import ChangePasswordDto from '@dto/userChangePassword.dto';
+import GoogleUser from './entity/googleUser.entity';
+import CreateUserDto from '@users/dto/user.dto';
+import UserLogin from '@dto/userLogin.dto';
+import User from './entity/user.entity';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
-import UserLogin from '@dto/userLogin.dto';
-import CreateUserDto from '@users/dto/user.dto';
-import ChangePasswordDto from '@dto/UserChangePassword.dto';
-import User from './entity/user.entity';
-import GoogleUser from './entity/googleUser.entity';
+import * as config from 'config';
 
 @Injectable()
 export class UsersService {
@@ -23,8 +24,15 @@ export class UsersService {
       user: login,
       iat: Math.floor(Date.now() / 1000) - 30,
     };
-    const older_token = jwt.sign(signature, process.env.JWT_SECRET);
+    const older_token = jwt.sign(signature, config.get('jwt.secret'));
     return older_token;
+  }
+
+  async getRoles(user_name: string) {
+    const user = await this.usersRepository.findOne({
+      where: { user_name: user_name },
+    });
+    return user.roles;
   }
 
   async googleLogin(req) {

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { Role } from 'src/auth/enums/role.enum';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('User')
@@ -24,6 +25,18 @@ export default class User {
   })
   @Column()
   last_name: string;
+
+  @ApiProperty({
+    description: 'The roles of the user.',
+  })
+  @Column({ default: Role.User })
+  roles: Role.User | Role.Admin;
+
+  @ApiProperty({
+    description: 'The googleId of the user.',
+  })
+  @Column({ default: 0 })
+  googleId: number;
 
   @ApiProperty({
     description: 'The password of the user.',
