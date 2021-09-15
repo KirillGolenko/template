@@ -29,12 +29,13 @@ export class AuthService {
   }
 
   public async getAuthenticatedUser(
-    user_name: string,
+    username: string,
     plainTextPassword: string,
   ) {
     try {
-      const user = await this.usersService.getByUserName(user_name);
+      const user = await this.usersService.getByUserName(username);
       await this.verifyPassword(plainTextPassword, user.password);
+
       user.password = undefined;
       return user;
     } catch (error) {

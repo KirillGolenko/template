@@ -7,7 +7,7 @@ export default class UserLogin {
     example: 'admin',
   })
   @IsNotEmpty()
-  user_name: string;
+  username: string;
 
   @ApiProperty({
     description: 'The password of the user.',

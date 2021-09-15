@@ -1,17 +1,17 @@
 import { Body, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { InjectModel } from '@nestjs/mongoose';
 import { Repository } from 'typeorm';
+import * as jwt from 'jsonwebtoken';
+import * as config from 'config';
+import * as bcrypt from 'bcrypt';
+import { Model } from 'mongoose';
 import ChangePasswordDto from '@dto/userChangePassword.dto';
+import { MUser, UserDocument } from './model/user.model';
 import GoogleUser from './entity/googleUser.entity';
 import CreateUserDto from '@users/dto/user.dto';
 import UserLogin from '@dto/userLogin.dto';
 import User from './entity/user.entity';
-import * as jwt from 'jsonwebtoken';
-import * as bcrypt from 'bcrypt';
-import * as config from 'config';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { MUser, UserDocument } from './model/user.model';
 
 @Injectable()
 export class UsersService {
@@ -26,20 +26,20 @@ export class UsersService {
 
   createHash(login: string) {
     const signature = {
-      user: login,
+      username: login,
       iat: Math.floor(Date.now() / 1000) - 30,
     };
     const older_token = jwt.sign(signature, config.get('jwt.secret'));
     return older_token;
   }
 
-  async getRoles(user_name: string) {
+  async getRoles(username: string) {
     // Postgress
     // const user = await this.usersRepository.findOne({
     //   where: { user_name: user_name },
     // });
 
-    const user = await this.userModel.findOne({ user_name });
+    const user = await this.userModel.findOne({ username });
 
     return user.roles;
   }
@@ -91,13 +91,13 @@ export class UsersService {
     }
   }
 
-  async getByUserName(user_name: string) {
+  async getByUserName(username: string) {
     // Postgress
     // const user = await this.usersRepository.findOne({
     //   where: { user_name: user_name },
     // });
 
-    const user = await this.userModel.findOne({ user_name });
+    const user = await this.userModel.findOne({ username });
 
     if (user) return user;
     throw new HttpException(
@@ -127,15 +127,15 @@ export class UsersService {
   }
 
   async login(@Body() data: UserLogin) {
-    const { user_name, password } = data;
+    const { username, password } = data;
     // Postgress
     // const user = await this.usersRepository.findOne({
     //   where: { user_name: user_name, password: password },
     // });
 
-    const user = await this.userModel.findOne({ user_name, password });
+    const user = await this.userModel.findOne({ username, password });
 
-    if (user) return { token: this.createHash(user_name), data: user };
+    if (user) return { token: this.createHash(username), data: user };
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 

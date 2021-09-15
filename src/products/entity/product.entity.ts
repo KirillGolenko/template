@@ -4,19 +4,19 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 class Product {
   @PrimaryGeneratedColumn()
-  public id: number;
+  id: number;
 
   @ApiProperty({
     description: 'The name of the Product.',
   })
   @Column()
-  public name: string;
+  name: string;
 
   @ApiProperty({
     description: 'The quantity of the Product.',
   })
   @Column()
-  public quantity: number;
+  quantity: number;
 }
 
 export default Product;

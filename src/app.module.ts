@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
 import { ProductsModule } from './products/products.module';
+import { SeedModule } from './seed/seed.module';
 import GoogleUser from '@users/entity/googleUser.entity';
 import Product from './products/entity/product.entity';
 
@@ -14,6 +15,7 @@ import Product from './products/entity/product.entity';
     AuthModule,
     DatabaseModule,
     ProductsModule,
+    SeedModule,
     TypeOrmModule.forFeature([User, GoogleUser, Product]),
   ],
   controllers: [],

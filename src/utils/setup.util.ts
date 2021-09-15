@@ -4,8 +4,9 @@ import * as cookieParser from 'cookie-parser';
 
 import { useSwagger } from './swagger.util';
 import HttpExceptionFilter from 'src/filters/http-exception.filter';
+import { LoggingInterceptor } from './logging.interceprot';
 
-export const setup = (app: NestExpressApplication, port: string) => {
+export const setup = async (app: NestExpressApplication, port: string) => {
   const logger = new Logger(setup.name);
   const path = '/api/v1';
 
@@ -14,10 +15,12 @@ export const setup = (app: NestExpressApplication, port: string) => {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.setGlobalPrefix(path);
   app.enableCors();
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   if (process.env.NODE_ENV !== 'production') {
     useSwagger(app, path);
   }
 
+  await app.listen(port);
   logger.log(`App is listening on port: ${port}`);
 };

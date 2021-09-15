@@ -8,10 +8,10 @@ import { AuthService } from '../auth.service';
 export default class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
     super({
-      usernameField: 'user_name',
+      usernameField: 'username',
     });
   }
-  async validate(user_name: string, password: string): Promise<User> {
-    return this.authService.getAuthenticatedUser(user_name, password);
+  async validate(username: string, password: string): Promise<User> {
+    return await this.authService.getAuthenticatedUser(username, password);
   }
 }

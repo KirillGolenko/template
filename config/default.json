@@ -22,8 +22,8 @@
     "expirationTime": 20000
   },
   "google": {
-    "id": "565285437773-4eassnqmftlv2mkedrpdhoi4qdb4l5hd.apps.googleusercontent.com",
-    "key": "2fCPAKWa9ea4Br5BuhPCXBJy"
+    "id": "",
+    "key": ""
   },
   "nodeEnvironment": "development"
 }

@@ -14,6 +14,7 @@
       "@utils/*": ["src/utils/*"],
       "@model/*": ["src/model/*"],
       "@users/*": ["src/users/*"],
+      "@products/*": ["src/products/*"],
       "@interface/*": ["src/auth/interface/*"],
       "@dto/*": ["src/auth/dto/*"],
       "@guard/*": ["src/auth/guard/*"]

@@ -24,7 +24,9 @@ import { format, transports } from 'winston';
         }),
       ),
       transports: [
-        new transports.Console(),
+        new transports.Console({
+          level: 'debug',
+        }),
         new transports.File({
           filename: 'error.log',
           level: 'error',
@@ -34,6 +36,4 @@ import { format, transports } from 'winston';
   });
 
   setup(app, port);
-
-  await app.listen(port);
 })();

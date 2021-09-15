@@ -56,10 +56,10 @@ export class AuthController {
   @UseGuards(LocalAuthenticationGuard)
   @Post('log-in')
   async logIn(@Body() body: UserLogin, @Res() response: Response) {
-    const { user_name } = body;
+    const { username } = body;
 
     const cookie = await this.authenticationService.getCookieWithJwtToken(
-      user_name,
+      username,
     );
 
     response.setHeader('Set-Cookie', cookie);
